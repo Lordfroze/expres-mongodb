@@ -26,6 +26,12 @@ app.get('/products', async (req,res) => {
     res.render('products/index', {products}) // menampilkan view index.ejs dari folder views
 })
 
+// Menampilkan form create
+app.get('/products/create', (req, res) => {
+    res.render('products/create')
+})
+
+
 // Menampilkan product berdasarkan id
 app.get('/products/:id', async (req, res) => {
     const {id} = req.params
@@ -33,6 +39,8 @@ app.get('/products/:id', async (req, res) => {
     console.log(product)
     res.render('products/show', {product}) // menampilkan view show.ejs dari folder views
 })
+
+
 
 app.listen(3000, () => {
     console.log('shop app listen on http://localhost:3000/')
