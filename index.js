@@ -21,9 +21,17 @@ app.get('/', (req, res) => {
 })
 
 // Membuat Restful Index Product / menampilkan seluruh data index
-app.get('/products', async (req,res) => {
-    const products = await Product.find({})
-    res.render('products/index', {products})
+app.get('/products', async (req,res) => {   
+    const products = await Product.find({})  // menampilkan query product.find dari mongodb
+    res.render('products/index', {products}) // menampilkan view index.ejs dari folder views
+})
+
+// Menampilkan product berdasarkan id
+app.get('/products/:id', async (req, res) => {
+    const {id} = req.params
+    const product  = await Product.findById(id) // menampilkan query product.findById dari mongodb
+    console.log(product)
+    res.render('products/show', {product}) // menampilkan view show.ejs dari folder views
 })
 
 app.listen(3000, () => {
