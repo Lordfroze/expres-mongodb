@@ -15,6 +15,7 @@ mongoose.connect('mongodb://localhost:27017/shop_db').then((result) => {
 
 app.set('views', path.join(__dirname, 'views'));  // menentukan folder views
 app.set('view engine', 'ejs');  // menentukan engine yang digunakan
+app.use(express.urlencoded({extended:true})) // agar data dapat diambil dari form
 
 app.get('/', (req, res) => {
     res.send('Hello World');
@@ -29,6 +30,13 @@ app.get('/products', async (req,res) => {
 // Menampilkan form create
 app.get('/products/create', (req, res) => {
     res.render('products/create')
+})
+
+// Menyimpan data
+app.post('/products', async (req, res) => {
+    const product = new Product(req.body) // mengambil data dari form
+    await product.save()
+    res.redirect(`/products/${product._id}`)
 })
 
 
