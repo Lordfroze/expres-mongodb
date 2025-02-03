@@ -48,6 +48,12 @@ app.get('/products/:id', async (req, res) => {
     res.render('products/show', {product}) // menampilkan view show.ejs dari folder views
 })
 
+// Menampilkan form edit
+app.get('/products/:id/edit', async (req, res) => {
+    const { id } = req.params
+    const product = await Product.findById(id)
+    res.render('products/edit', {product})
+})
 
 
 app.listen(3000, () => {

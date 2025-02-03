@@ -9,11 +9,12 @@
     <h1><%= product.name %></h1>
     <ul>
         <li>Brand: <%= product.brand %></li>
-        <li>Brand: <%= product.color %></li>
-        <li>Brand: <%= product.size %></li>
-        <li>Brand: <%= product.price %></li>
+        <li>Color: <%= product.color %></li>
+        <li>price: <%= product.price %></li>
+        <li>Category: <%= product.category %></li>
     </ul>
 
     <a href="/products">All Products</a>
+    <a href="/products/<%= product._id %>/edit">Edit</a>
 </body>
 </html>
