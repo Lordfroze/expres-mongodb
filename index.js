@@ -16,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/shop_db').then((result) => {
 
 app.set('views', path.join(__dirname, 'views'));  // menentukan folder views
 app.set('view engine', 'ejs');  // menentukan engine yang digunakan
-app.use(express.urlencoded({extended:true})) // agar data dapat diambil dari form
+app.use(express.urlencoded({ extended: true })) // agar data dapat diambil dari form
 app.use(methodOverride('_method')) // import method override
 
 app.get('/', (req, res) => {
@@ -24,9 +24,18 @@ app.get('/', (req, res) => {
 })
 
 // Membuat Restful Index Product / menampilkan seluruh data index
-app.get('/products', async (req,res) => {   
-    const products = await Product.find({})  // menampilkan query product.find dari mongodb
-    res.render('products/index', {products}) // menampilkan view index.ejs dari folder views
+app.get('/products', async (req, res) => {
+    const { category } = req.query // menambahkan filter berdasarkan category
+    if (category) {
+        const products = await Product.find({ category })
+        res.render('products/index', { products, category })
+
+    } else {  // jika filter category tidak ada tampilkan semua data
+
+        const products = await Product.find({})  // menampilkan query product.find dari mongodb
+        res.render('products/index', { products, category: 'All' }) // menampilkan view index.ejs dari folder views
+    }
+
 })
 
 // Menampilkan form create
@@ -44,24 +53,31 @@ app.post('/products', async (req, res) => {
 
 // Menampilkan product berdasarkan id
 app.get('/products/:id', async (req, res) => {
-    const {id} = req.params
-    const product  = await Product.findById(id) // menampilkan query product.findById dari mongodb
+    const { id } = req.params
+    const product = await Product.findById(id) // menampilkan query product.findById dari mongodb
     console.log(product)
-    res.render('products/show', {product}) // menampilkan view show.ejs dari folder views
+    res.render('products/show', { product }) // menampilkan view show.ejs dari folder views
 })
 
 // Menampilkan form edit
 app.get('/products/:id/edit', async (req, res) => {
     const { id } = req.params
     const product = await Product.findById(id)
-    res.render('products/edit', {product})
+    res.render('products/edit', { product })
 })
 
 // Melakukan proses update untuk menerapkan hasil form edit
-app.put('/products/:id', async (req,res) => {
+app.put('/products/:id', async (req, res) => {
     const { id } = req.params
-    const product = await Product.findByIdAndUpdate(id, req.body, {runValidators: true})
+    const product = await Product.findByIdAndUpdate(id, req.body, { runValidators: true })
     res.redirect(`/products/${product._id}`)
+})
+
+// Menghapus product
+app.delete('/products/:id', async (req, res) => {
+    const { id } = req.params
+    await Product.findByIdAndDelete(id)
+    res.redirect('/products')
 })
 
 
